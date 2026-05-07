@@ -16,6 +16,18 @@ React + Vite + Tailwind: demos de segunda ley, DCL, equilibrio vertical, roce, f
 | `npm run build` | Genera `dist/` |
 | `npm run preview` | Prueba del build |
 
+## Subir el repositorio remoto
+
+El proyecto tiene Git inicializado con un primer commit local. Para conectar GitHub o GitLab:
+
+```bash
+git remote add origin <URL-del-repositorio-vacio>
+git branch -M main
+git push -u origin main
+```
+
+Creá el repositorio vacío en la web (sin README duplicado si ya usás este).
+
 ## Licencia / uso
 
 Proyecto académico — Universidad Evangélica de El Salvador.
