@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-deep: #050402;
+  --bg-elev: #0b0a08;
+  --accent: #6ef0ff;
+  --accent-hot: #d9ff54;
+  --r-panel: 22px;
+  --r-stage: 28px;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  background: var(--bg-deep);
+  color: rgb(245 243 239);
+}
+
+#root {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.panel-rail {
+  background: linear-gradient(
+    158deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 42%,
+    transparent 92%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.stage-panel {
+  background: linear-gradient(
+    175deg,
+    rgba(19, 22, 29, 0.96) 0%,
+    rgba(8, 9, 12, 0.94) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 32px 100px rgba(0, 0, 0, 0.55);
+}
+
+.app-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}

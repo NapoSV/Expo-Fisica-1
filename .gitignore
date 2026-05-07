@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+*.local
+
+# Logs y entorno
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env
+.env.*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Vite
+.vite/
+
+# Python accidental en esta carpeta compartida
+**/python-buscador/
+
+# HTML de pruebas locales
+deepseek*.html
