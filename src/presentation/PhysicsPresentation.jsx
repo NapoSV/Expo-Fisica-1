@@ -3,13 +3,16 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SCENES, PART_LABELS, TOTAL_INNER } from './sceneConfig.js'
 import {
   CoverScene,
-  MotionLawScene,
+  InerciaScene,
   MassRaceScene,
-  SecondLawTheoryScene,
-  NetForceScene,
   DCLScene,
+  ForcesCatalogScene,
+  UnitsAxesScene,
+  AngledForcesScene,
+  NetForceScene,
   ExerciseVerticalScene,
   ExerciseFrictionScene,
+  InclinedPlaneScene,
   ExerciseCentripetalScene,
   RealWorldScene,
   OutroScene,
@@ -24,30 +27,21 @@ function globalStepIndex(sceneIndex, innerStep) {
 
 function SceneRouter({ sceneId }) {
   switch (sceneId) {
-    case 'cover':
-      return <CoverScene />
-    case 'motion':
-      return <MotionLawScene />
-    case 'massRace':
-      return <MassRaceScene />
-    case 'secondLaw':
-      return <SecondLawTheoryScene />
-    case 'netForce':
-      return <NetForceScene />
-    case 'dcl':
-      return <DCLScene />
-    case 'exoVertical':
-      return <ExerciseVerticalScene />
-    case 'exoFriction':
-      return <ExerciseFrictionScene />
-    case 'exoCentripetal':
-      return <ExerciseCentripetalScene />
-    case 'realWorld':
-      return <RealWorldScene />
-    case 'outro':
-      return <OutroScene />
-    default:
-      return null
+    case 'cover':          return <CoverScene />
+    case 'inercia':        return <InerciaScene />
+    case 'massRace':       return <MassRaceScene />
+    case 'dcl':            return <DCLScene />
+    case 'forcesCatalog':  return <ForcesCatalogScene />
+    case 'unitsAxes':      return <UnitsAxesScene />
+    case 'angledForces':   return <AngledForcesScene />
+    case 'netForce':       return <NetForceScene />
+    case 'exoVertical':    return <ExerciseVerticalScene />
+    case 'exoFriction':    return <ExerciseFrictionScene />
+    case 'exoInclined':    return <InclinedPlaneScene />
+    case 'exoCentripetal': return <ExerciseCentripetalScene />
+    case 'realWorld':      return <RealWorldScene />
+    case 'outro':          return <OutroScene />
+    default:               return null
   }
 }
 
@@ -170,7 +164,7 @@ export default function PhysicsPresentation() {
       </main>
 
       <footer className="z-20 shrink-0 border-t border-white/[0.08] bg-[linear-gradient(180deg,rgba(8,9,11,0.95),rgba(4,5,7,0.98))] px-5 py-3.5 backdrop-blur-xl md:px-9">
-        <div className="mx-auto flex max-w-[min(104rem,calc(100vw-2.25rem))] flex-wrap items-center justify-end gap-3">
+        <div className="mx-auto flex w-full max-w-[min(104rem,calc(100vw-2.25rem))] flex-wrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={goPrev}
