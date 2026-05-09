@@ -11,6 +11,8 @@ export function DualMassRaceSim({ className = '' }) {
   const [running, setRunning] = useState(false)
   const [x1, setX1] = useState(0)
   const [x2, setX2] = useState(0)
+  const [v1Max, setV1Max] = useState(0)
+  const [v2Max, setV2Max] = useState(0)
   const [tSim, setTSim] = useState(0)
   const trackRef = useRef(null)
   const rafRef = useRef(0)
@@ -37,6 +39,8 @@ export function DualMassRaceSim({ className = '' }) {
     simRef.current = { x1: 0, x2: 0, v1: 0, v2: 0, t: 0 }
     setX1(0)
     setX2(0)
+    setV1Max(0)
+    setV2Max(0)
     setTSim(0)
     setRunning(false)
   }, [])
@@ -46,6 +50,8 @@ export function DualMassRaceSim({ className = '' }) {
     simRef.current = { x1: 0, x2: 0, v1: 0, v2: 0, t: 0 }
     setX1(0)
     setX2(0)
+    setV1Max(0)
+    setV2Max(0)
     setTSim(0)
     setRunning(true)
   }
@@ -74,6 +80,8 @@ export function DualMassRaceSim({ className = '' }) {
       }
       setX1(s.x1)
       setX2(s.x2)
+      setV1Max((m) => Math.max(m, s.v1))
+      setV2Max((m) => Math.max(m, s.v2))
       setTSim(s.t)
       const bothStopped = s.x1 >= xMax - 1e-5 && s.x2 >= xMax - 1e-5
       if (s.t < 12 && !bothStopped) {
@@ -93,7 +101,7 @@ export function DualMassRaceSim({ className = '' }) {
   return (
     <div className={`w-full min-w-0 ${className}`}>
       <p className="mb-4 text-sm text-slate-500">
-        Ajusta los relojes y pulsa <strong className="text-slate-300">Largar</strong>. No hay movimiento hasta entonces.
+        Fija la fuerza común y las masas; pulsa <strong className="text-slate-300">Largar</strong> para iniciar. Antes de eso los bloques permanecen en reposo.
       </p>
       <div className="mb-4 grid gap-3 font-mono text-xs text-slate-400 md:grid-cols-3">
         <label className="flex min-w-0 flex-col gap-1">
@@ -184,11 +192,12 @@ export function DualMassRaceSim({ className = '' }) {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 font-mono text-[11px] text-slate-400 md:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-2 font-mono text-[11px] text-slate-400 md:grid-cols-5">
         <div className="min-w-0 rounded-lg bg-white/5 px-2 py-2">Δx₁ = {x1.toFixed(2)} m</div>
         <div className="min-w-0 rounded-lg bg-white/5 px-2 py-2">Δx₂ = {x2.toFixed(2)} m</div>
+        <div className="min-w-0 rounded-lg bg-amber-500/10 px-2 py-2 ring-1 ring-amber-500/20">v₁ máx. = {v1Max.toFixed(2)} m/s</div>
+        <div className="min-w-0 rounded-lg bg-amber-500/10 px-2 py-2 ring-1 ring-amber-500/20">v₂ máx. = {v2Max.toFixed(2)} m/s</div>
         <div className="min-w-0 rounded-lg bg-white/5 px-2 py-2">a₁/a₂ = {a2 > 0 ? (a1 / a2).toFixed(2) : '—'}</div>
-        <div className="min-w-0 rounded-lg bg-white/5 px-2 py-2">Δx ∝ a si t igual</div>
       </div>
     </div>
   )

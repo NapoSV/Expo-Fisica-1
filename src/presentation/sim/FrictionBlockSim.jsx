@@ -22,6 +22,7 @@ export function FrictionBlockSim({
   const [running, setRunning] = useState(false)
   const [x, setX] = useState(0)
   const [v, setV] = useState(0)
+  const [vMax, setVMax] = useState(0)
   const rafRef = useRef(0)
   const simRef = useRef({ x: 0, v: 0 })
   const pxPerM = useRef(52)
@@ -72,6 +73,7 @@ export function FrictionBlockSim({
       }
       setX(s.x)
       setV(s.v)
+      setVMax((vm) => Math.max(vm, s.v))
       rafRef.current = requestAnimationFrame(tick)
     }
     rafRef.current = requestAnimationFrame(tick)
@@ -83,6 +85,7 @@ export function FrictionBlockSim({
     simRef.current = { x: 0, v: 0 }
     setX(0)
     setV(0)
+    setVMax(0)
     setRunning(false)
   }, [])
 
@@ -90,6 +93,7 @@ export function FrictionBlockSim({
     simRef.current = { x: 0, v: 0 }
     setX(0)
     setV(0)
+    setVMax(0)
     setRunning(true)
   }
 
@@ -184,19 +188,20 @@ export function FrictionBlockSim({
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">
         {[
           ['Masa m', `${M} kg`, 'text-white'],
           ['Fuerza neta (eje x)', `${FnetDisplay.toFixed(1)} N`, 'text-cyan-300'],
           ['Aceleración a', `${aShow.toFixed(2)} m/s²`, 'text-amber-300'],
           ['Rapidez v', `${v.toFixed(2)} m/s`, 'text-slate-200'],
+          ['v máx. registro', `${vMax.toFixed(2)} m/s`, 'text-amber-200'],
         ].map(([label, val, col]) => (
           <div key={label} className="rounded-2xl bg-white/5 px-4 py-4">
             <p className="text-xs text-slate-500">{label}</p>
             <p className={`mt-1 font-mono text-xl font-semibold md:text-2xl ${col}`}>{val}</p>
           </div>
         ))}
-        <div className="col-span-2 rounded-2xl bg-white/5 px-4 py-4 md:col-span-4">
+        <div className="col-span-2 rounded-2xl bg-white/5 px-4 py-4 md:col-span-5">
           <p className="text-xs text-slate-500">Posición x (desde el arranque)</p>
           <p className="mt-1 font-mono text-xl font-semibold text-slate-200 md:text-2xl">{x.toFixed(2)} m</p>
         </div>

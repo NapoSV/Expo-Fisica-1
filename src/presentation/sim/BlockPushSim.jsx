@@ -15,6 +15,7 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
   const [F0, setF0] = useState(0)
   const [x, setX] = useState(0)
   const [v, setV] = useState(0)
+  const [vMax, setVMax] = useState(0)
   const [, setTSim] = useState(0)
 
   const trackRef = useRef(null)
@@ -47,6 +48,7 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
     setX(0)
     setV(0)
     setTSim(0)
+    setVMax(0)
   }, [])
 
   const handlePointerDown = (e) => {
@@ -57,6 +59,7 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
     simRef.current = { x: 0, v: 0, t: 0, F: 0 }
     setX(0)
     setV(0)
+    setVMax(0)
     setTSim(0)
     setF0(0)
     dragStartX.current = e.clientX
@@ -109,6 +112,7 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
       }
       setX(s.x)
       setV(s.v)
+      setVMax((vm) => Math.max(vm, Math.abs(s.v)))
       setTSim(s.t)
 
       const atWall = s.x >= xMax - 1e-5
@@ -190,7 +194,7 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
         </div>
       </div>
 
-      <dl className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs text-slate-300 md:grid-cols-5">
+      <dl className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs text-slate-300 md:grid-cols-6">
         <div className="rounded-xl bg-white/5 px-3 py-2">
           <dt className="text-slate-500">F</dt>
           <dd className="text-cyan-300">{Fdisp.toFixed(1)} N</dd>
@@ -207,6 +211,10 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
           <dt className="text-slate-500">v</dt>
           <dd>{v.toFixed(2)} m/s</dd>
         </div>
+        <div className="rounded-xl bg-amber-500/10 px-3 py-2 ring-1 ring-amber-500/25">
+          <dt className="text-amber-200/90">v máx.</dt>
+          <dd className="font-bold text-amber-200">{vMax.toFixed(2)} m/s</dd>
+        </div>
         <div className="rounded-xl bg-white/5 px-3 py-2">
           <dt className="text-slate-500">x</dt>
           <dd>{x.toFixed(2)} m</dd>
@@ -214,12 +222,12 @@ export function BlockPushSim({ defaultMass = 10, massMin = 1, massMax = 80, clas
       </dl>
 
       <div className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-slate-300 md:text-base">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Origen de los números</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Referencias numéricas</p>
         <p className="font-mono">
           a = F/m = {Fdisp.toFixed(1)} / {mass} = <span className="text-amber-300 font-bold">{aInst.toFixed(2)} m/s²</span>
         </p>
         <p className="mt-2 text-slate-500">
-          F sale del tirón (“escala” demo); m del deslizador. v y x los integra el programa con esa a.
+          F proviene del tirón simulado; m del deslizador. v y x se obtienen integrando numéricamente con esa a.
         </p>
       </div>
     </div>

@@ -1,7 +1,7 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
- * Curva vista desde arriba: arrastra el vehículo sobre el arco. Sin animación automática.
+ * Curva vista desde arriba: arrastra el vehículo o actívalo en reproducción automática (ω = v/r).
  * F_c = m v² / r hacia el centro.
  */
 export function CentripetalCurveSim({ className = '' }) {
@@ -10,7 +10,30 @@ export function CentripetalCurveSim({ className = '' }) {
   const [rMeters, setRMeters] = useState(50)
   const [theta, setTheta] = useState(-Math.PI / 2)
   const [dragging, setDragging] = useState(false)
+  const [autoPlay, setAutoPlay] = useState(false)
+  const [vMaxSession, setVMaxSession] = useState(20)
   const svgRef = useRef(null)
+
+  useEffect(() => {
+    setVMaxSession((vm) => Math.max(vm, v))
+  }, [v])
+
+  const omega = v / rMeters
+
+  useEffect(() => {
+    if (!autoPlay || dragging) return
+    let raf = 0
+    let last = performance.now()
+    const loop = (now) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      const w = v / rMeters
+      setTheta((th) => th + w * dt)
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [autoPlay, dragging, v, rMeters])
 
   const Rpx = 130
   const cx = 200
@@ -85,6 +108,24 @@ export function CentripetalCurveSim({ className = '' }) {
           />
           <span className="font-mono text-2xl font-bold text-fuchsia-300">{rMeters} m</span>
         </label>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setAutoPlay((a) => !a)}
+          className={`rounded-xl px-5 py-2.5 font-display text-sm font-bold transition ${
+            autoPlay
+              ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/25'
+              : 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+          }`}
+        >
+          {autoPlay ? 'Pausar' : 'Reproducir en automático'}
+        </button>
+        <p className="max-w-[52ch] text-sm text-slate-500">
+          En automático el coche recorre la curva con rapidez tangencial <span className="font-mono text-slate-300">v</span> y velocidad angular{' '}
+          <span className="font-mono text-cyan-300">ω = v / r</span> ≈ <span className="font-mono text-cyan-200">{(omega * (180 / Math.PI)).toFixed(2)}°/s</span>. Ajusta los deslizadores mientras corre. Si arrastras el coche, la reproducción se interrumpe hasta soltar.
+        </p>
       </div>
 
       <div className="relative mx-auto aspect-square w-full max-w-2xl">
@@ -177,21 +218,31 @@ export function CentripetalCurveSim({ className = '' }) {
       </div>
 
       <p className="mb-3 mt-2 text-center text-sm text-slate-500">
-        Arrastra el coche sobre el círculo punteado (vista desde arriba). Los vectores son el roce/canal que empuja
-        hacia el centro (magenta) y la velocidad tangente (verde).
+        Arrastra el coche sobre el círculo punteado o usa <strong className="text-slate-400">Reproducir en automático</strong>. Los vectores: empuje hacia el centro (magenta) y velocidad tangente (verde).
       </p>
 
-      <div className="grid grid-cols-1 gap-3 rounded-2xl border border-cyan-500/20 bg-black/40 p-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 rounded-2xl border border-cyan-500/20 bg-black/40 p-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <p className="text-xs uppercase text-slate-500">Fuerza centrípeta</p>
           <p className="font-mono text-2xl font-bold text-fuchsia-300 md:text-3xl">{Fc.toLocaleString(undefined, { maximumFractionDigits: 0 })} N</p>
         </div>
         <div>
-          <p className="text-xs uppercase text-slate-500">Fórmula usada</p>
+          <p className="text-xs uppercase text-slate-500">ω = v / r</p>
+          <p className="mt-1 font-mono text-lg text-emerald-200">
+            {omega.toFixed(3)} rad/s
+          </p>
+          <p className="mt-0.5 font-mono text-xs text-slate-500">{(omega * (180 / Math.PI)).toFixed(2)}°/s</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase text-slate-500">Fórmula</p>
           <p className="mt-1 font-mono text-lg text-cyan-200">F_c = m v² / r</p>
         </div>
         <div>
-          <p className="text-xs uppercase text-slate-500">Sustitución</p>
+          <p className="text-xs uppercase text-amber-200/90">v máx. usada en sesión</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-amber-200">{vMaxSession.toFixed(1)} m/s</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase text-slate-500">Sustitución m·v²/r</p>
           <p className="mt-1 wrap-break-word font-mono text-sm text-slate-300">
             {m} · {v}² / {rMeters}
           </p>

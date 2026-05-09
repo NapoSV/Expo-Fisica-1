@@ -1,7 +1,10 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+const X_VISUAL_MAX_M = 180
 
 /**
  * Marcha: aceleración suave hasta crucero. Frenar: |a| ≈ μg. Un solo bucle rAF, sin re-montajes por estado.
+ * Posición del bloque: translateX en px (sin transition CSS) para evitar el “teletransporte” con animaciones en `left`.
  */
 export function BrakingSim({ className = '' }) {
   const m = 1200
@@ -9,16 +12,19 @@ export function BrakingSim({ className = '' }) {
   const g = 9.81
   const fMax = mu * m * g
   const aBrake = fMax / m
-  const aAccel = 1.4
-  const vCruise = 22
+  const aAccel = 0.9
+  const vCruise = 10
 
   const [v, setV] = useState(0)
   const [x, setX] = useState(0)
+  const [vPeak, setVPeak] = useState(0)
   const [ui, setUi] = useState('idle')
   const raf = useRef(0)
   const sim = useRef({ v: 0, x: 0 })
   const motor = useRef('off')
   const lastRef = useRef(0)
+  const trackRef = useRef(null)
+  const [trackTravelPx, setTrackTravelPx] = useState(280)
 
   const stopLoop = () => {
     cancelAnimationFrame(raf.current)
@@ -60,8 +66,28 @@ export function BrakingSim({ className = '' }) {
 
     setV(s.v)
     setX(s.x)
+    setVPeak((p) => Math.max(p, s.v))
     raf.current = requestAnimationFrame(tick)
   }, [aBrake, aAccel, vCruise])
+
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const measure = () => {
+      const w = el.getBoundingClientRect().width
+      const carW = window.matchMedia('(min-width: 768px)').matches ? 128 : 112
+      const inner = Math.max(120, w * 0.94 - carW)
+      setTrackTravelPx(inner)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    window.addEventListener('resize', measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [])
 
   const start = () => {
     stopLoop()
@@ -69,6 +95,7 @@ export function BrakingSim({ className = '' }) {
     lastRef.current = performance.now()
     setV(0)
     setX(0)
+    setVPeak(0)
     motor.current = 'accel'
     setUi('accel')
     raf.current = requestAnimationFrame(tick)
@@ -88,10 +115,11 @@ export function BrakingSim({ className = '' }) {
     sim.current = { v: 0, x: 0 }
     setV(0)
     setX(0)
+    setVPeak(0)
     setUi('idle')
   }
 
-  const carLeftPct = Math.min(84, 5 + (x / 180) * 79)
+  const offsetPx = Math.min(trackTravelPx, (x / X_VISUAL_MAX_M) * trackTravelPx)
 
   return (
     <div className={`w-full min-w-0 rounded-2xl border border-white/10 bg-slate-950/70 p-4 md:p-8 ${className}`}>
@@ -134,22 +162,26 @@ export function BrakingSim({ className = '' }) {
         <span className="text-sm text-slate-500">
           {ui === 'idle' && 'Listo.'}
           {ui === 'accel' && `Aceleración nominal ${aAccel} m/s² hasta ~${vCruise} m/s.`}
-          {ui === 'cruise' && 'Crucero — momento para comentar y frenar.'}
+          {ui === 'cruise' && 'Crucero constante — listo para frenar.'}
           {ui === 'braking' && `Frenado con |a| ≈ ${aBrake.toFixed(1)} m/s².`}
           {ui === 'stopped' && 'Detenido.'}
         </span>
       </div>
 
-      <div className="relative h-52 overflow-hidden rounded-xl bg-black/50 md:h-64">
-        <div className="absolute bottom-16 left-[3%] right-[3%] h-3 rounded bg-slate-700" />
-        <div className="absolute bottom-20 w-28 md:w-32" style={{ left: `${carLeftPct}%`, transition: 'left 80ms linear' }}>
+      <div ref={trackRef} className="relative h-52 overflow-hidden rounded-xl bg-black/50 md:h-64">
+        <div className="pointer-events-none absolute bottom-16 left-[3%] right-[3%] h-3 rounded bg-slate-700" />
+        <div
+          className="absolute bottom-20 left-[3%] w-28 will-change-transform md:w-32"
+          style={{ transform: `translate3d(${offsetPx}px, 0, 0)` }}
+        >
           <div className="h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-700 shadow-xl shadow-cyan-500/25 md:h-16" />
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">
         {[
           ['Rapidez v', `${v.toFixed(1)} m/s`, 'text-cyan-300'],
+          ['v máx. sesión', `${vPeak.toFixed(1)} m/s`, 'text-amber-200'],
           ['Distancia', `${x.toFixed(1)} m`, 'text-white'],
           ['|a| frenado', `${aBrake.toFixed(2)} m/s²`, 'text-amber-300'],
           ['μ·g', `${(mu * g).toFixed(2)} m/s²`, 'text-slate-400'],

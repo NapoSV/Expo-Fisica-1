@@ -9,7 +9,7 @@ import {
   ConclusionRecapLab,
 } from './PhysicsLabs.jsx'
 
-/** Orden igual que `sections.slice(1)` — cada derecha debe ser un laboratorio manejable desde el público */
+/** Orden igual que `sections.slice(1)` — cada derecha es un laboratorio con controles accesibles desde proyector o táctil */
 const LAB_BY_SECTION_INDEX = [
   RocketThrustLab,
   FormulaMassAccelLab,
@@ -31,44 +31,44 @@ export default function PhysicsPresentation() {
       title: '¿Por qué los objetos aceleran?',
       subtitle: 'Todo cambia cuando una fuerza actúa.',
       content:
-        'Automóviles, cohetes, atletas y máquinas responden a fuerzas que gobiernan el movimiento. Mueve el empuje y la masa hasta que el público perciba cómo aparece esa aceleración al instante.',
+        'Automóviles, cohetes, atletas y máquinas responden a fuerzas que gobiernan el movimiento. Con el empuje y la masa visibles, la aceleración aparece de inmediato en el modelo.',
     },
     {
       title: 'La Segunda Ley de Newton',
       subtitle: 'La fuerza neta produce aceleración.',
       formula: 'F = m · a',
       content:
-        'Desliza el bloque modelo con el ratón o el táctil sobre un riel horizontal sin roce. Al soltar, la animación sólo obedece a F y m: la velocidad cambia porque el motor integra esa misma a = F ÷ m ante el público.',
+        'Desliza el bloque modelo con el ratón o el táctil sobre un riel horizontal sin roce. Al soltar, la animación obedece a F y m: la velocidad cambia porque se integra numéricamente a = F ÷ m.',
     },
     {
       title: 'Fuerza Neta',
       subtitle: 'Las fuerzas compiten entre sí.',
       content:
-        'La resultante marca qué lado gana ese instante. Si la suma se anula sobre el modelo, ese eje conceptual queda quieto dentro de tus propios supuestos.',
+        'La resultante indica qué efecto predomina en ese instante. Si la suma se anula sobre el modelo en un eje, ese eje queda en equilibrio para las condiciones supuestas.',
     },
     {
       title: 'Diagramas de Cuerpo Libre',
       subtitle: 'El idioma de la mecánica.',
       content:
-        'Apaga fuerzas hasta que sólo sobrevivan las tres o cuatro que realmente deseas mencionar ante el público; cada flecha queda legitimada porque tú mismo la prendes desde el clic.',
+        'Cada botón activa o apaga una fuerza sobre el cuerpo aislado; el diagrama muestra sólo las interacciones elegidas en ese momento.',
     },
     {
       title: 'Laboratorio guiado sobre el riel',
       subtitle: 'Caja modelo con roce',
       content:
-        'Misma mesa caricaturizada en pantalla, pero ahora con masa, empuje y rozamiento que tocas con el público: coloca la caja con el puntero donde quieras plantear el problema y, al soltar, deja que ese empuje compita con la fricción sobre la misma masa m del slider.',
+        'Misma mesa en pantalla con masa, empuje y rozamiento regulables: se coloca la caja con el puntero y, al soltar, el empuje compite con la fricción para la masa fijada en el deslizador.',
     },
     {
       title: 'Aplicaciones rápidas',
       subtitle: 'La física vuelve repetible en otros mundos.',
       content:
-        'Pestaña a pestaña muestras ordenes distintos: curva urbana frenada, electromovilidad exagerada, cohete, salto caricaturesco dentro de tu misma segunda ley o impulso lineal muy simple.',
+        'Ejemplos en pestañas: curva con frenado, escenario eléctrico, cohete, salto y un modelo de impulso lineal, todos bajo la misma segunda ley.',
     },
     {
       title: 'Conclusión',
-      subtitle: 'Tus diapositivas ahora están vivas porque el pacto físico existe entre mano del presentador y oídos del público.',
+      subtitle: 'Síntesis: fuerza neta y trayectoria siguen las mismas reglas en todos los casos vistos.',
       content:
-        'Cierra forzando el número neto igual al producto masa por aceleración: si aumentas la fuerza con la misma masa, la aceleración sube proporcionalmente, y ese balance queda ante el público sin ambigüedad.',
+        'Para cerrar: la fuerza neta iguala masa por aceleración (en un marco inercial). Con masa fija, mayor fuerza neta implica mayor magnitud de aceleración en la dirección de la resultante.',
     },
   ]
 

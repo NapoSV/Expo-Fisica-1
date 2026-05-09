@@ -233,28 +233,58 @@ export function WeightStackSim({ className = '', showQuiz = true, defaultStep = 
         </div>
       </div>
 
-      <div className="mt-2 grid grid-cols-2 gap-4">
-        <motion.div layout className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
-          <p className="text-xs text-zinc-500">Peso total P</p>
-          <p key={`p-${n}`} className="font-mono text-2xl font-bold text-cyan-300 md:text-3xl">
-            {P.toFixed(1)} N
+      <div className="mt-2 space-y-3">
+        <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--accent-hot)]/90">
+          Misma cifra ≠ misma fuerza: en reposo |N| = |P| por ΣFᵧ = 0
+        </p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+          <motion.div
+            layout
+            className="rounded-xl border border-cyan-500/25 bg-cyan-950/25 p-4 sm:col-span-1"
+          >
+            <p className="text-xs text-cyan-200/80">Peso P (↓)</p>
+            <p key={`p-${n}`} className="font-mono text-2xl font-bold text-cyan-300 md:text-3xl">
+              {P.toFixed(1)} N
+            </p>
+          </motion.div>
+          <motion.div
+            layout
+            className="flex flex-col justify-center rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center sm:col-span-1"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400/90">Equilibrio ΣFᵧ</p>
+            <p className="mt-1 font-mono text-xl font-bold text-emerald-300 md:text-2xl">N − P = 0</p>
+            <p className="mt-1 font-mono text-xs text-zinc-500">0.0 N neto vertical</p>
+          </motion.div>
+          <motion.div
+            layout
+            className="rounded-xl border border-blue-500/25 bg-blue-950/20 p-4 sm:col-span-1"
+          >
+            <p className="text-xs text-blue-200/85">Normal N (↑)</p>
+            <p key={`norm-${n}`} className="font-mono text-2xl font-bold text-blue-300 md:text-3xl">
+              {N.toFixed(1)} N
+            </p>
+          </motion.div>
+        </div>
+        <div className="rounded-xl border border-amber-500/30 bg-amber-950/25 px-4 py-3 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-200/90">v máx. registro (eje horizontal)</p>
+          <p className="mt-1 font-mono text-xl font-bold text-amber-200 md:text-2xl">0.00 m/s</p>
+          <p className="mt-1 text-xs text-zinc-500">
+            Equilibrio estático: no hay traslación horizontal modelada.
           </p>
-        </motion.div>
-        <motion.div layout className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
-          <p className="text-xs text-zinc-500">Normal N (mesa)</p>
-          <p key={`n-${n}`} className="font-mono text-2xl font-bold text-blue-300 md:text-3xl">
-            {N.toFixed(1)} N
-          </p>
-        </motion.div>
+        </div>
+        <div className="rounded-xl border border-white/12 bg-black/40 px-4 py-3 text-center font-mono text-[0.82rem] leading-relaxed text-zinc-300 md:text-sm">
+          Reposo sobre mesa horizontal: ΣFᵧ = 0 ⇒ N − P = 0 ⇒ |N| = |P| = mg<sub>tot</sub>. En el dibujo:{' '}
+          <span className="text-cyan-300">P ↓</span> (atracción terrestre) y <span className="text-blue-300">N ↑</span> (contacto mesa)—interacciones distintas con la misma magnitud numérica en este modelo.
+        </div>
       </div>
 
       {showQuiz ? (
         <div className="mt-6 rounded-2xl border border-dashed border-[color:var(--accent-hot)]/35 bg-[color:var(--accent-hot)]/[0.04] p-4 md:p-5">
           <p className="mb-3 font-display text-sm font-semibold text-[color:var(--accent-hot)] md:text-base">
-            Comprobación rápida (cuento en voz alta mientras lo hago)
+            Ejemplo numérico
           </p>
           <p className="mb-3 text-sm text-zinc-400">
-            Si dejo <strong className="text-white">n = 5</strong> esferas (cada una {mEach} kg), ¿cuánto debería marcar la normal N en newtons? Escribo la respuesta y verifico.
+            Con <strong className="text-white">n = 5</strong> esferas de {mEach} kg cada una, ¿cuánto vale la normal <strong className="text-white">N</strong> en newtons? Introducir la respuesta y pulsar Verificar.
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <input
@@ -291,10 +321,12 @@ export function WeightStackSim({ className = '', showQuiz = true, defaultStep = 
           {checked === 'ok' && <p className="mt-3 font-mono text-sm text-emerald-400">Correcto: N ≈ {expectedN.toFixed(1)} N.</p>}
           {checked === 'no' && (
             <p className="mt-3 font-mono text-sm text-rose-300">
-              Reviso el cálculo: P = (5×{mEach})·g ≈ {expectedN.toFixed(1)} N; en equilibrio N = P.
+              Recordatorio: P = (5×{mEach})·g ≈ {expectedN.toFixed(1)} N; en equilibrio sobre mesa horizontal N = P.
             </p>
           )}
-          {checked === 'invalid' && <p className="mt-3 text-sm text-amber-200">Ingreso un número (puedo usar punto decimal).</p>}
+          {checked === 'invalid' && (
+            <p className="mt-3 text-sm text-amber-200">Introducir un número (se admite punto decimal).</p>
+          )}
         </div>
       ) : null}
     </div>
