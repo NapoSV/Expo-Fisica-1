@@ -1,8 +1,17 @@
 # Presentación interactiva — Física (GP2 · Física I)
 
-React + Vite + Tailwind: demos de segunda ley, DCL, equilibrio vertical, roce, fuerza centrípeta y frenado.
+🚀 **Presentación en vivo:** https://naposv.github.io/Expo-Fisica-1/
 
-## Para compañeros
+> Solo abrí el link en cualquier browser — no requiere instalar nada.
+
+React + Vite + Tailwind: 14 escenas alineadas a 7 expositores. Inercia, DCL + modelo de partícula, catálogo de fuerzas (W·N·T·f), unidades SI, descomposición trigonométrica, equilibrio, ejercicios resueltos, plano inclinado y aplicación al frenado.
+
+## Navegación
+
+- `→` o `Espacio` — siguiente diapositiva
+- `←` o `Backspace` — diapositiva anterior
+
+## Para correrla local (opcional)
 
 1. **[INSTALACION.md](./INSTALACION.md)** — Node.js y `npm install`.
 2. **[EJECUCION.md](./EJECUCION.md)** — `npm run dev`, atajos de teclado y build.
@@ -16,17 +25,9 @@ React + Vite + Tailwind: demos de segunda ley, DCL, equilibrio vertical, roce, f
 | `npm run build` | Genera `dist/` |
 | `npm run preview` | Prueba del build |
 
-## Subir el repositorio remoto
+## Deploy automático
 
-El proyecto tiene Git inicializado con un primer commit local. Para conectar GitHub o GitLab:
-
-```bash
-git remote add origin <URL-del-repositorio-vacio>
-git branch -M main
-git push -u origin main
-```
-
-Creá el repositorio vacío en la web (sin README duplicado si ya usás este).
+Cada `git push` a `master` dispara un workflow que reconstruye y publica la presentación en `https://naposv.github.io/Expo-Fisica-1/` (~2 min). Workflow en [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml).
 
 ## Licencia / uso
 
